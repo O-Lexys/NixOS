@@ -3,6 +3,7 @@
   inputs = {
     spicetify-nix = {
     url = "github:Gerg-L/spicetify-nix";
+    inputs.nixpkgs.follows = "nixpkgs";
     };
     noctalia = {
       url = "github:noctalia-dev/noctalia-shell";
@@ -28,6 +29,7 @@
   };
   outputs =
     {
+      spicetify-nix,
       nixpkgs,
       home-manager,
       zen-browser,
@@ -80,6 +82,7 @@
         lioha = home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
           extraSpecialArgs = {
+	    inherit spicetify-nix;
             inherit noctalia;
             inherit zen-browser;
             inherit youtube-music;

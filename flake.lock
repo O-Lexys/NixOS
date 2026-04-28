@@ -39,11 +39,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1777383340,
-        "narHash": "sha256-hr0r50h+w3RktVoH39i/xDiJ96r59tH85KoFjkJpw9k=",
+        "lastModified": 1777387187,
+        "narHash": "sha256-+c51GFvEZQ+XtfiFNJ65HJ5G3nDY+AaZ1rRyJihA+g0=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "dd6a8772d4faa9627fd342342c77b0afca59eba3",
+        "rev": "982139628581c309b6a25c55deed564b546ebf74",
         "type": "github"
       },
       "original": {
@@ -165,19 +165,6 @@
         "url": "https://channels.nixos.org/nixos-unstable/nixexprs.tar.xz"
       }
     },
-    "nixpkgs_4": {
-      "locked": {
-        "lastModified": 1776877367,
-        "narHash": "sha256-wMN1gM00sUQ2KC9CNr/XEOGdfOrl67PabIRv9AYayTo=",
-        "rev": "0726a0ecb6d4e08f6adced58726b95db924cef57",
-        "type": "tarball",
-        "url": "https://releases.nixos.org/nixos/unstable/nixos-26.05pre985613.0726a0ecb6d4/nixexprs.tar.xz"
-      },
-      "original": {
-        "type": "tarball",
-        "url": "https://channels.nixos.org/nixos-unstable/nixexprs.tar.xz"
-      }
-    },
     "noctalia": {
       "inputs": {
         "nixpkgs": [
@@ -255,7 +242,9 @@
     },
     "spicetify-nix": {
       "inputs": {
-        "nixpkgs": "nixpkgs_4",
+        "nixpkgs": [
+          "nixpkgs"
+        ],
         "systems": "systems_2"
       },
       "locked": {
