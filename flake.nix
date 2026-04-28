@@ -1,0 +1,93 @@
+{
+  description = "My nix config";
+  inputs = {
+    spicetify-nix = {
+    url = "github:Gerg-L/spicetify-nix";
+    };
+    noctalia = {
+      url = "github:noctalia-dev/noctalia-shell";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    zen-browser = {
+      url = "github:youwen5/zen-browser-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    youtube-music = {
+      url = "github:h-banii/youtube-music-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+     prismlauncher = {
+      url = "github:Diegiwg/PrismLauncher-Cracked";
+    };
+    nixcord.url = "github:FlameFlag/nixcord";
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+  };
+  outputs =
+    {
+      nixpkgs,
+      home-manager,
+      zen-browser,
+      youtube-music,
+      noctalia,
+      nixcord,
+      prismlauncher,
+      ...
+    }@inputs:
+    let
+      system = "x86_64-linux";
+      lazer-pkg = final: prev: {
+        Lazer = final.callPackage ./home/localpkgs/Lazer { };
+      };
+      carla-patched-pkg = final: prev: {
+        carla-patched = final.callPackage ./home/localpkgs/carla-patched { };
+      };
+      qt6ct-kde-pkg = final: prev: {
+        qt6ct-kde = final.callPackage ./home/localpkgs/qt6ct-kde { };
+      };
+      osu-lazer-pkg = final: prev: {
+        osu-lazer = final.callPackage ./home/localpkgs/osu-lazer { };
+      };
+
+      pkgs = import nixpkgs {
+        inherit system;
+        config.allowUnfree = true;
+        config.permittedInsecurePackages = [
+          "electron-38.8.4"
+        ];
+        overlays = [
+          lazer-pkg
+          carla-patched-pkg
+          qt6ct-kde-pkg
+          osu-lazer-pkg
+        ];
+      };
+    in
+    {
+      packages.${system} = {
+        carla-patched = pkgs.carla-patched; # Temporary for force rebuild
+      };
+      nixosConfigurations = {
+        Lioha = nixpkgs.lib.nixosSystem {
+          modules = [ ./configuration.nix ];
+          specialArgs = { inherit system inputs; };
+        };
+      };
+      homeConfigurations = {
+        lioha = home-manager.lib.homeManagerConfiguration {
+          inherit pkgs;
+          extraSpecialArgs = {
+            inherit noctalia;
+            inherit zen-browser;
+            inherit youtube-music;
+            inherit nixcord;
+	    inherit prismlauncher;
+          };
+          modules = [ ./home.nix ];
+        };
+      };
+    };
+}
