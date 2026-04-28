@@ -11,7 +11,7 @@
     carla-patched
     zerotierone
     spicetify-cli
-    spotify
+    #spotify
     coolercontrol.coolercontrol-gui
     pavucontrol
     shotcut
