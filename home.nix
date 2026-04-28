@@ -19,6 +19,9 @@ in {
       adblockify
       hidePodcasts
       shuffle
+      popupLyrics
+      volumePercentage
+      keyboardShortcut
     ];
     theme = spicePkgs.themes.catppuccin;
     colorScheme = "mocha";
