@@ -36,7 +36,7 @@
     qpwgraph
     waypaper
     wofi
-    lutris
+   # lutris
     mpv
     mpvpaper
     linuxKernel.packages.linux_zen.v4l2loopback
