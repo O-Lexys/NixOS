@@ -9,7 +9,10 @@
   home.packages = with pkgs; [
     zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
     carla-patched
+    v4l-utils
     zerotierone
+    python311
+    gitui
     spicetify-cli
     #spotify
     coolercontrol.coolercontrol-gui
@@ -63,6 +66,7 @@
     vlc
     gpu-screen-recorder
     cliphist
+    osu-lazer
     wl-clipboard
     zip
     jq
@@ -95,7 +99,6 @@
     };
     noctalia-shell = {
       enable = true;
-      systemd.enable = true;
     };
     starship = {
       enable = true;

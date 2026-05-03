@@ -67,11 +67,46 @@
           osu-lazer-pkg
         ];
       };
+
+      voiceAssistantEnv = pkgs.python312.withPackages (ps: with ps; [
+        anthropic
+        speechrecognition
+        pyaudio
+        gtts
+        requests
+        python-dotenv
+        pip
+      ]);
     in
     {
       packages.${system} = {
         carla-patched = pkgs.carla-patched; # Temporary for force rebuild
       };
+
+      devShells.${system}.default = pkgs.mkShell {
+        buildInputs = [
+          voiceAssistantEnv
+          pkgs.espeak-ng
+          pkgs.sox
+          pkgs.mpg123
+          pkgs.alsa-utils
+          pkgs.curl
+          pkgs.unzip
+        ];
+        shellHook = ''
+          echo "🇺🇦 Голосовий асистент NixOS готовий"
+          export PYTHONPATH=$PYTHONPATH:.
+          export PIP_PREFIX="$HOME/.local"
+          export PYTHONPATH="$HOME/.local/lib/python3.12/site-packages:$PYTHONPATH"
+          export PATH="$HOME/.local/bin:$PATH"
+          if ! python3 -c "import vosk" 2>/dev/null; then
+            echo "Встановлюю vosk..."
+            pip install vosk --quiet
+          fi
+          echo "Запуск: python3 ~/.config/voice-assistant/assistant.py"
+        '';
+      };
+
       nixosConfigurations = {
         Lioha = nixpkgs.lib.nixosSystem {
           modules = [ ./configuration.nix ];
@@ -82,12 +117,12 @@
         lioha = home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
           extraSpecialArgs = {
-	    inherit spicetify-nix;
+            inherit spicetify-nix;
             inherit noctalia;
             inherit zen-browser;
             inherit youtube-music;
             inherit nixcord;
-	    inherit prismlauncher;
+            inherit prismlauncher;
           };
           modules = [ ./home.nix ];
         };
