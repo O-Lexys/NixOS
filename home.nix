@@ -1,8 +1,10 @@
-{ youtube-music, noctalia, nixcord, spicetify-nix, pkgs, ... }: 
-let
-  spicePkgs = spicetify-nix.legacyPackages.${pkgs.system};
+{ youtube-music, noctalia, nixcord, spicetify-nix, pkgs, ... }:
+let spicePkgs = spicetify-nix.legacyPackages.${pkgs.system};
 in {
   imports = [
+    ./moduls/obs.nix
+    ./moduls/AI.nix
+    ./moduls/zsh.nix
     spicetify-nix.homeManagerModules.default
     ./home/theme.nix
     ./home/packages.nix
@@ -12,18 +14,11 @@ in {
     youtube-music.homeManagerModules.default
     nixcord.homeModules.nixcord
   ];
-
   programs.spicetify = {
     enable = true;
-    enabledExtensions = with spicePkgs.extensions; [
-      adblockify
-      hidePodcasts
-      shuffle
-      popupLyrics
-      volumePercentage
-      keyboardShortcut
-    ];
-    theme = spicePkgs.themes.catppuccin;
-    colorScheme = "mocha";
+    theme = spicePkgs.themes.text;
+    colorScheme = "Spotify";
+    enabledCustomApps = with spicePkgs.apps; [ marketplace ];
   };
+
 }

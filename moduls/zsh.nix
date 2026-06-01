@@ -82,8 +82,8 @@
       Animefetch = "fastfetch -l ~/Pictures/fetch.jpg --logo-width 28";
       fetch = "nix run nixpkgs#nitch";
       Nfu = "cd ~/nix && nix flake update";
-      Osw = "nh os switch /home/kanapka/nix/";
-      Hsw = "nh home switch /home/kanapka/nix/";
+      Osw = "nh os switch /home/lioha/nix/";
+      Hsw = "nh home switch /home/lioha/nix/";
       #     rebuild = "sudo nixos-rebuild switch --flake ~/nix";
       #     hupdate = "home-manager switch --flake ~/nix";
     };
@@ -99,7 +99,7 @@
       size = 100000;
       ignoreAllDups = true;
       ignoreSpace = true;
-      path = "/home/kanapka/.zsh_history";
+      path = "/home/lioha/.zsh_history";
     };
   };
 }

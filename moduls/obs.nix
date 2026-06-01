@@ -20,23 +20,21 @@
       obs-pipewire-audio-capture
       obs-transition-table
       obs-move-transition
-      #obs-vaapi
-      #obs-vkcapture
+      obs-vaapi
+      obs-vkcapture
       obs-advanced-masks
       obs-gradient-source
       obs-3d-effect
-      #obs-rgb-levels-filter
-      #obs-nvfbc
       droidcam-obs
       obs-move-transition
-      #advanced-scene-switcher
+      advanced-scene-switcher
       waveform
-      #obs-vintage-filter
-      #obs-transition-table
-      #obs-source-switcher
+      obs-vintage-filter
+      obs-transition-table
+      obs-source-switcher
       obs-scale-to-sound
-      #obs-mute-filter
-      #obs-composite-blur
+      obs-mute-filter
+      obs-composite-blur
     ];
   };
 }

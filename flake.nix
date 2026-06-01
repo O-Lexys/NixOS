@@ -1,9 +1,10 @@
 {
   description = "My nix config";
   inputs = {
+    musnix.url = "github:musnix/musnix";
     spicetify-nix = {
-    url = "github:Gerg-L/spicetify-nix";
-    inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:Gerg-L/spicetify-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
     noctalia = {
       url = "github:noctalia-dev/noctalia-shell";
@@ -18,27 +19,15 @@
       url = "github:h-banii/youtube-music-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-     prismlauncher = {
-      url = "github:Diegiwg/PrismLauncher-Cracked";
-    };
+    prismlauncher = { url = "github:Diegiwg/PrismLauncher-Cracked"; };
     nixcord.url = "github:FlameFlag/nixcord";
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
-  outputs =
-    {
-      spicetify-nix,
-      nixpkgs,
-      home-manager,
-      zen-browser,
-      youtube-music,
-      noctalia,
-      nixcord,
-      prismlauncher,
-      ...
-    }@inputs:
+  outputs = { spicetify-nix, nixpkgs, home-manager, zen-browser, youtube-music
+    , noctalia, nixcord, prismlauncher, musnix, ... }@inputs:
     let
       system = "x86_64-linux";
       lazer-pkg = final: prev: {
@@ -57,31 +46,22 @@
       pkgs = import nixpkgs {
         inherit system;
         config.allowUnfree = true;
-        config.permittedInsecurePackages = [
-          "electron-38.8.4"
-        ];
-        overlays = [
-          lazer-pkg
-          carla-patched-pkg
-          qt6ct-kde-pkg
-          osu-lazer-pkg
-        ];
+        config.permittedInsecurePackages = [ "electron-38.8.4" ];
+        overlays = [ lazer-pkg carla-patched-pkg qt6ct-kde-pkg osu-lazer-pkg ];
       };
 
-      voiceAssistantEnv = pkgs.python312.withPackages (ps: with ps; [
-        anthropic
-        speechrecognition
-        pyaudio
-        gtts
-        requests
-        python-dotenv
-        pip
-      ]);
-    in
-    {
-      packages.${system} = {
-        carla-patched = pkgs.carla-patched; # Temporary for force rebuild
-      };
+      voiceAssistantEnv = pkgs.python312.withPackages (ps:
+        with ps; [
+          anthropic
+          speechrecognition
+          pyaudio
+          gtts
+          requests
+          python-dotenv
+          pip
+        ]);
+    in {
+      packages.${system} = { carla-patched = pkgs.carla-patched; };
 
       devShells.${system}.default = pkgs.mkShell {
         buildInputs = [
@@ -93,18 +73,6 @@
           pkgs.curl
           pkgs.unzip
         ];
-        shellHook = ''
-          echo "🇺🇦 Голосовий асистент NixOS готовий"
-          export PYTHONPATH=$PYTHONPATH:.
-          export PIP_PREFIX="$HOME/.local"
-          export PYTHONPATH="$HOME/.local/lib/python3.12/site-packages:$PYTHONPATH"
-          export PATH="$HOME/.local/bin:$PATH"
-          if ! python3 -c "import vosk" 2>/dev/null; then
-            echo "Встановлюю vosk..."
-            pip install vosk --quiet
-          fi
-          echo "Запуск: python3 ~/.config/voice-assistant/assistant.py"
-        '';
       };
 
       nixosConfigurations = {
@@ -123,6 +91,7 @@
             inherit youtube-music;
             inherit nixcord;
             inherit prismlauncher;
+            inherit musnix;
           };
           modules = [ ./home.nix ];
         };

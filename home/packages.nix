@@ -1,17 +1,48 @@
-{
-  pkgs,
-  zen-browser,
-  prismlauncher,
-  ...
-}:
-{
+{ pkgs, zen-browser, prismlauncher, ... }: {
 
   home.packages = with pkgs; [
+    #hyprlandPlugins.hypr-dynamic-cursors
+    #hyprlandPlugins.hy3
+    slurp
+    wl-clipboard
+    tesseract
+    imagemagick
+    zbar
+    curl
+    ffmpeg
+    wl-screenrec
+    kdePackages.qtwebsockets
+    virtualbox
+    xdg-desktop-portal-hyprland
+    pipewire
+    wireplumber
+    rnnoise-plugin
+    xkbutils
+    ydotool
+    anydesk
+    blockbench
+    freerdp
+    remmina
+    nvme-cli
     zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
+    upower
+    auto-cpufreq
     carla-patched
+    zoxide
+    wget
+    linuxKernel.packages.linux_5_10.v4l2loopback
+    alsa-utils
+    sox
+    pciutils
+    firefox
+    usbutils
+    vulkan-tools
+    powertop
+    acpi
+    yazi
+    mangohud
     v4l-utils
     zerotierone
-    python311
     gitui
     spicetify-cli
     #spotify
@@ -23,30 +54,25 @@
     xjobs
     kdePackages.ark
     antimicrox
-    nano
     evtest
     usbutils
-    rnnoise-plugin
     xclicker
-    firefox
     droidcam
     cmatrix
     pywal
     qbittorrent
     killall
-    pkgs.jdk8
     linux-wallpaperengine
     qpwgraph
     waypaper
     wofi
-   # lutris
+    #lutris
     mpv
     mpvpaper
-    linuxKernel.packages.linux_zen.v4l2loopback
-    youtube-music
     fastfetch
     swayimg
     grimblast
+    grim
     lm_sensors
     libnotify
     vesktop
@@ -56,7 +82,7 @@
     waybar
     kdePackages.dolphin
     krita
-    btop
+    (btop.override { cudaSupport = true; })
     discord-canary
     nemo-with-extensions
     kitty
@@ -94,15 +120,9 @@
     };
   };
   programs = {
-    zsh = {
-      enable = true;
-    };
-    noctalia-shell = {
-      enable = true;
-    };
-    starship = {
-      enable = true;
-    };
+    zsh = { enable = true; };
+    noctalia-shell = { enable = true; };
+    starship = { enable = true; };
     obs-studio = {
       enable = true;
       plugins = with pkgs.obs-studio-plugins; [ obs-pipewire-audio-capture ];
@@ -111,17 +131,15 @@
       enable = true;
       nix-direnv.enable = true;
     };
-    neovim = {
-      enable = true;
-      vimAlias = true;
-      vimdiffAlias = true;
-      withNodeJs = true;
-      plugins = [ pkgs.vimPlugins.nvim-treesitter.withAllGrammars ];
-    };
+    #   neovim = {
+    #     enable = true;
+    #     vimAlias = true;
+    #     vimdiffAlias = true;
+    #     withNodeJs = true;
+    #     plugins = [ pkgs.vimPlugins.nvim-treesitter.withAllGrammars ];
+    #   };
     home-manager.enable = true;
-    fzf = {
-      enable = true;
-    };
+    fzf = { enable = true; };
     carapace = {
       enable = true;
       enableNushellIntegration = true;

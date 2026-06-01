@@ -4,7 +4,6 @@
     kernelPackages = pkgs.linuxPackages_latest;
     tmp.cleanOnBoot = true; 
 
-    # Додаємо модулі для MSI
     kernelModules = [ "ec_sys" ]; 
     extraModulePackages = [ config.boot.kernelPackages.msi-ec ];
 
