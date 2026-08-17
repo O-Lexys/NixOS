@@ -1,8 +1,42 @@
-{ pkgs, zen-browser, prismlauncher, ... }: {
+{
+  pkgs,
+  zen-browser,
+  prismlauncher,
+  concord,
+  ...
+}:
+{
 
   home.packages = with pkgs; [
-    #hyprlandPlugins.hypr-dynamic-cursors
-    #hyprlandPlugins.hy3
+    wayvnc
+    android-tools
+    lsfg-vk-ui
+    lsfg-vk
+    mapscii
+    sherlock
+    playerctl
+    openssl
+    evtest
+    libinput
+    scope-tui
+    blender
+    scrcpy
+    source2viewer-cli
+    cmake
+    zed-editor
+    uv
+    lavat
+    pkgs.kdePackages.kio-extras
+    bandwhich
+    networkmanagerapplet
+    appimage-run
+    activate-linux
+    terminaltexteffects
+    cbonsai
+    dust
+    sl
+    iw
+    tty-clock
     slurp
     wl-clipboard
     tesseract
@@ -12,10 +46,6 @@
     ffmpeg
     wl-screenrec
     kdePackages.qtwebsockets
-    virtualbox
-    xdg-desktop-portal-hyprland
-    pipewire
-    wireplumber
     rnnoise-plugin
     xkbutils
     ydotool
@@ -28,6 +58,8 @@
     upower
     auto-cpufreq
     carla-patched
+    tap-plugins
+    calf
     zoxide
     wget
     linuxKernel.packages.linux_5_10.v4l2loopback
@@ -35,11 +67,11 @@
     sox
     pciutils
     firefox
-    usbutils
     vulkan-tools
     powertop
     acpi
     yazi
+    gamescope
     mangohud
     v4l-utils
     zerotierone
@@ -49,24 +81,21 @@
     coolercontrol.coolercontrol-gui
     pavucontrol
     shotcut
-    lm_sensors
     nbfc-linux
     xjobs
     kdePackages.ark
     antimicrox
-    evtest
     usbutils
     xclicker
     droidcam
     cmatrix
     pywal
-    qbittorrent
     killall
     linux-wallpaperengine
     qpwgraph
     waypaper
     wofi
-    #lutris
+    lutris
     mpv
     mpvpaper
     fastfetch
@@ -76,24 +105,25 @@
     lm_sensors
     libnotify
     vesktop
-    cava
     yt-dlp
-    calf
     waybar
     kdePackages.dolphin
     krita
     (btop.override { cudaSupport = true; })
     discord-canary
+    (discord.override {
+      withEquicord = true;
+      #withVencord = true;
+      withOpenASAR = true;
+      #withMoonlight = true;
+    })
     nemo-with-extensions
     kitty
-    ffmpeg
     flatpak
     libreoffice-qt-fresh
     vlc
     gpu-screen-recorder
     cliphist
-    osu-lazer
-    wl-clipboard
     zip
     jq
     unzip
@@ -102,9 +132,10 @@
     fzf
     nixd
     zenity
-    nixfmt-classic
+    nixfmt
     ripgrep
     hypridle
+    concord.packages.${pkgs.system}.concord
     prismlauncher.packages.${pkgs.system}.prismlauncher
   ];
 
@@ -120,9 +151,12 @@
     };
   };
   programs = {
-    zsh = { enable = true; };
-    noctalia-shell = { enable = true; };
-    starship = { enable = true; };
+    zsh = {
+      enable = true;
+    };
+    starship = {
+      enable = true;
+    };
     obs-studio = {
       enable = true;
       plugins = with pkgs.obs-studio-plugins; [ obs-pipewire-audio-capture ];
@@ -139,7 +173,9 @@
     #     plugins = [ pkgs.vimPlugins.nvim-treesitter.withAllGrammars ];
     #   };
     home-manager.enable = true;
-    fzf = { enable = true; };
+    fzf = {
+      enable = true;
+    };
     carapace = {
       enable = true;
       enableNushellIntegration = true;

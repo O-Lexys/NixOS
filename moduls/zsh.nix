@@ -1,9 +1,4 @@
-{
-  pkgs,
-  config,
-  ...
-}:
-{
+{ pkgs, config, ... }: {
   programs.zsh.plugins = [
     {
       name = "zsh-vi-mode";
@@ -93,6 +88,9 @@
             export SHELL=/run/current-system/sw/bin/bash
             eval "$(zoxide init zsh)"
             export STARSHIP_CONFIG=~/.config/starship/starship.toml
+            ff() {
+        fastfetch | tte --random-effect
+      }
     '';
 
     history = {
