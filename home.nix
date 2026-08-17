@@ -1,7 +1,18 @@
-{ youtube-music, noctalia, nixcord, spicetify-nix, pkgs, ... }:
-let spicePkgs = spicetify-nix.legacyPackages.${pkgs.system};
-in {
+{
+  youtube-music,
+  noctalia,
+  nixcord,
+  spicetify-nix,
+  pkgs,
+  ...
+}:
+let
+  spicePkgs = spicetify-nix.legacyPackages.${pkgs.system};
+in
+{
   imports = [
+    ./moduls/carla.nix
+    ./moduls/kdeconnect.nix
     ./moduls/obs.nix
     ./moduls/AI.nix
     ./moduls/zsh.nix
@@ -16,9 +27,6 @@ in {
   ];
   programs.spicetify = {
     enable = true;
-    theme = spicePkgs.themes.text;
-    colorScheme = "Spotify";
     enabledCustomApps = with spicePkgs.apps; [ marketplace ];
   };
-
 }

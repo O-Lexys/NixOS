@@ -7,7 +7,8 @@ let
   kde-theme = "Breeze";
   kde-icons = "breeze-dark";
   kde-font = ''"Fixel Text Medium,14,-1,5,500,0,0,0,0,0,0,0,0,0,0,1,Regular"'';
-in {
+in
+{
 
   home.packages = with pkgs; [
     kdePackages.breeze.qt5
@@ -17,11 +18,14 @@ in {
 
   # Cursor setup
   home.pointerCursor = {
+    enable = true;
     package = pkgs.Lazer;
     name = "Lazer";
     size = 24;
     gtk.enable = true;
-    x11 = { enable = true; };
+    x11 = {
+      enable = true;
+    };
   };
 
   # GTK Setup
@@ -42,7 +46,9 @@ in {
     };
   };
   dconf.settings = {
-    "org/gtk/settings/file-chooser" = { sort-directories-first = true; };
+    "org/gtk/settings/file-chooser" = {
+      sort-directories-first = true;
+    };
 
     # GTK4 Setup
     "org/gnome/desktop/interface" = {
@@ -57,8 +63,7 @@ in {
       text = lib.generators.toINI { } {
 
         Appearance = {
-          color_scheme_path =
-            "${pkgs.kdePackages.breeze}/share/color-schemes/BreezeDark.colors";
+          color_scheme_path = "${pkgs.kdePackages.breeze}/share/color-schemes/BreezeDark.colors";
           custom_palette = "true";
           icon_theme = kde-icons;
           standard_dialogs = "default";
@@ -74,8 +79,7 @@ in {
           cursor_flash_time = "1000";
           dialog_buttons_have_icons = "1";
           double_click_interval = "400";
-          gui_effects =
-            "General, AnimateMenu, AnimateCombo, AnimateTooltip, AnimateToolBox";
+          gui_effects = "General, AnimateMenu, AnimateCombo, AnimateTooltip, AnimateToolBox";
           keyboard_scheme = "3";
           menus_have_icons = "true";
           show_shortcuts_in_context_menus = "true";
@@ -85,8 +89,7 @@ in {
           wheel_scroll_lines = "3";
         };
         SettingWindow = {
-          geometry =
-            "@ByteArray(x1xd9xd0xcb0x3000000000000x4+00x2xcd0000000000x5-00x4x1d0000x2000ax800000000000x4+00x2xcd)";
+          geometry = "@ByteArray(x1xd9xd0xcb0x3000000000000x4+00x2xcd0000000000x5-00x4x1d0000x2000ax800000000000x4+00x2xcd)";
         };
         Troubleshooting = {
           force_raster_widgets = "1";

@@ -2,53 +2,53 @@
 {
   boot = {
     kernelPackages = pkgs.linuxPackages_latest;
-    tmp.cleanOnBoot = true; 
+    tmp.cleanOnBoot = true;
 
-    kernelModules = [ "ec_sys" ]; 
+    kernelModules = [ "ec_sys" ];
     extraModulePackages = [ config.boot.kernelPackages.msi-ec ];
 
     loader = {
-      efi.canTouchEfiVariables = true; 
+      efi.canTouchEfiVariables = true;
       grub = {
-        enable = true; 
-        device = "nodev"; 
+        enable = true;
+        device = "nodev";
         efiSupport = true;
-        useOSProber = true; 
+        useOSProber = true;
         gfxmodeEfi = "1920x1080";
       };
-      timeout = 5; 
+      timeout = 5;
     };
 
     plymouth = {
-      enable = true; 
-      themePackages = with pkgs; 
-      [
-        (adi1090x-plymouth-themes.override { selected_themes = [ "rings" ]; }) 
-      ];
+      enable = true;
+      themePackages = with pkgs;
+        [
+          (adi1090x-plymouth-themes.override {
+            selected_themes = [ "square_hud" ];
+          })
+        ];
     };
 
     consoleLogLevel = 0;
-    initrd.verbose = false; 
+    initrd.verbose = false;
     kernelParams = [
       "quiet"
-      "splash" 
-      "boot.shell_on_fail" 
-      "loglevel=3" 
-      "rd.systemd.show_status=false" 
-      "rd.udev.log_level=3" 
+      "splash"
+      "boot.shell_on_fail"
+      "loglevel=3"
+      "rd.systemd.show_status=false"
+      "rd.udev.log_level=3"
       "udev.log_priority=3"
-      "resume_offset=51200" 
+      "resume_offset=51200"
       # КЛЮЧОВИЙ ПАРАМЕТР: дозволяє CoolerControl керувати вентиляторами
-      "ec_sys.write_support=1" 
+      "ec_sys.write_support=1"
     ];
     resumeDevice = ""; # TODO [cite: 27]
   };
 
   powerManagement.enable = true;
-  swapDevices = [
-    {
-      device = "/var/lib/swapfile"; 
-      size = 16 * 1024; 
-    }
-  ]; 
+  swapDevices = [{
+    device = "/var/lib/swapfile";
+    size = 16 * 1024;
+  }];
 }
