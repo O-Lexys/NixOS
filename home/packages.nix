@@ -8,6 +8,13 @@
 {
 
   home.packages = with pkgs; [
+    spotube
+    input-remapper
+    brave
+    openrgb
+    imv
+    cava
+    libxtst
     wayvnc
     android-tools
     lsfg-vk-ui
@@ -135,6 +142,7 @@
     nixfmt
     ripgrep
     hypridle
+    #concord-tui
     concord.packages.${pkgs.system}.concord
     prismlauncher.packages.${pkgs.system}.prismlauncher
   ];
