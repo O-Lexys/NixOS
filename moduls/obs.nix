@@ -13,25 +13,26 @@
     );
 
     plugins = with pkgs.obs-studio-plugins; [
+      input-overlay
       wlrobs
       obs-tuna
-      obs-shaderfilter
+      #obs-shaderfilter
       obs-backgroundremoval
       obs-pipewire-audio-capture
       obs-transition-table
-      obs-move-transition
+      #obs-move-transition
       obs-vaapi
       obs-vkcapture
       obs-advanced-masks
       obs-gradient-source
       obs-3d-effect
       droidcam-obs
-      obs-move-transition
+      #obs-move-transition
       advanced-scene-switcher
       waveform
       obs-vintage-filter
       obs-transition-table
-      obs-source-switcher
+      #obs-source-switcher
       obs-scale-to-sound
       obs-mute-filter
       obs-composite-blur

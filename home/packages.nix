@@ -5,13 +5,34 @@
   concord,
   ...
 }:
+let
+  zen-browser-wrapped = pkgs.symlinkJoin {
+    name = "zen-browser";
+    paths = [ zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default ];
+    buildInputs = [ pkgs.makeWrapper ];
+    postBuild = ''
+      for bin in $out/bin/*; do
+        wrapProgram "$bin" \
+          --prefix LD_LIBRARY_PATH : "${pkgs.ffmpeg.lib}/lib"
+      done
+    '';
+  };
+in
 {
 
   home.packages = with pkgs; [
+    gimp
+    sptlrx
+    maigret
+    cargo
+    nix-search-tv
+    hyprshade
+    wlr-randr
+    gearlever
+    claude-code
+    synfigstudio
+    unrar
     spotube
-    input-remapper
-    brave
-    openrgb
     imv
     cava
     libxtst
@@ -36,7 +57,6 @@
     pkgs.kdePackages.kio-extras
     bandwhich
     networkmanagerapplet
-    appimage-run
     activate-linux
     terminaltexteffects
     cbonsai
@@ -55,13 +75,13 @@
     kdePackages.qtwebsockets
     rnnoise-plugin
     xkbutils
-    ydotool
     anydesk
     blockbench
     freerdp
     remmina
     nvme-cli
-    zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
+    zen-browser-wrapped
+    #zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
     upower
     auto-cpufreq
     carla-patched
@@ -116,7 +136,9 @@
     waybar
     kdePackages.dolphin
     krita
-    (btop.override { cudaSupport = true; })
+    (pkgs.writeShellScriptBin "btop" ''
+      exec env LD_LIBRARY_PATH=/run/opengl-driver/lib:${pkgs.btop}/lib ${pkgs.btop}/bin/btop "$@"
+    '')
     discord-canary
     (discord.override {
       withEquicord = true;
@@ -127,7 +149,6 @@
     nemo-with-extensions
     kitty
     flatpak
-    libreoffice-qt-fresh
     vlc
     gpu-screen-recorder
     cliphist

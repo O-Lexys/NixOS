@@ -5,7 +5,6 @@
   services.dbus.enable = true;
   services.logrotate.checkConfig = false;
   systemd.services.logrotate-checkconf.enable = false;
-  services.speechd.enable = false;
   services.upower = {
     enable = true;
     criticalPowerAction = "Hibernate";

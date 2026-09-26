@@ -41,8 +41,9 @@
     "acpi_enforce_resources=lax"
   ];
   environment.systemPackages = with pkgs; [
-    android-studio
-    wireshark
+    pipx
+    ydotool
+    osu-lazer-bin
     kdePackages.kio-extras
     libmtp
     #inputs.hyprgrass.packages.${pkgs.system}.default
@@ -97,17 +98,6 @@
   ];
   environment.sessionVariables = {
     LIBVA_DRIVER_NAME = "iHD";
-    __GLX_VENDOR_LIBRARY_NAME = "nvidia";
-  };
-  networking.wg-quick.interfaces.wg0 = {
-    configFile = "/home/lioha/wireguard/wg0.conf";
-  };
-  networking.networkmanager.enable = true;
-  networking.wireguard.enable = true;
-  networking.firewall = {
-    enable = true;
-    checkReversePath = false;
-    allowedTCPPorts = [ 22 ];
   };
   services.udev.extraRules = ''
     ACTION=="add", SUBSYSTEM=="platform", DRIVERS=="msi-ec", ATTR{fan_mode}="*", MODE="0666"
@@ -132,6 +122,10 @@
       ];
     };
   };
+  networking.firewall.trustedInterfaces = [ "docker0" ];
+  networking.firewall.extraCommands = ''
+    iptables -I DOCKER-USER -j RETURN
+  '';
   users.users.lioha.extraGroups = [
     "kvm"
     "wireshark"
@@ -139,31 +133,39 @@
     "docker"
     "input"
   ];
-  services.sunshine = {
-    enable = true;
-    autoStart = true;
-    capSysAdmin = true;
-    openFirewall = true;
-  };
-  services.input-remapper.enable = true;
-  services.cloudflare-warp.enable = true;
-  services.gvfs.enable = true;
-  services.flatpak.enable = true;
-  services.upower.enable = true;
-  #services.auto-cpufreq.enable = true;
-  services.udisks2.enable = true;
-  services.power-profiles-daemon.enable = true;
-  services.xserver.enable = true;
-  services.thermald.enable = true;
-  services.openssh = {
-    enable = true;
-    settings = {
-      PasswordAuthentication = false; # тільки ключі
-      PermitRootLogin = "no";
-      KbdInteractiveAuthentication = false;
+  services = {
+    desktopManager.plasma6.enable = false;
+    resolved.enable = true;
+    sunshine = {
+      enable = true;
+      autoStart = true;
+      capSysAdmin = true;
+      openFirewall = true;
+      settings = {
+        output_name = "HEADLESS-1";
+        capture = "wlr";
+      };
+    };
+    input-remapper.enable = true;
+    cloudflare-warp.enable = true;
+    gvfs.enable = true;
+    flatpak.enable = true;
+    upower.enable = true;
+    #auto-cpufreq.enable = true;
+    udisks2.enable = true;
+    power-profiles-daemon.enable = true;
+    xserver.enable = true;
+    thermald.enable = true;
+    openssh = {
+      enable = true;
+      openFirewall = true;
+      settings = {
+        PasswordAuthentication = false; # тільки ключі
+        PermitRootLogin = "no";
+        KbdInteractiveAuthentication = false;
+      };
     };
   };
-
   services.logind.settings.Login = {
     HandleLidSwitch = "lock";
     HandleLidSwitchExternalPower = "lock";
@@ -172,13 +174,18 @@
   };
   hardware.graphics.enable = true;
   hardware.enableRedistributableFirmware = true;
-  services.zerotierone.enable = true;
   services.xserver.videoDrivers = [ "nvidia" ];
   xdg.portal = {
     enable = true;
     config.common.default = "hyprland";
   };
   programs = {
+    driftwm.enable = true;
+    appimage = {
+      enable = true;
+      binfmt = true;
+    };
+    fuse.userAllowOther = true;
     wireshark = {
       enable = true;
       package = pkgs.wireshark;
@@ -252,11 +259,6 @@
         user = "greeter";
         command = "${pkgs.tuigreet}/bin/tuigreet --sessions ${config.services.displayManager.sessionData.desktops}/share/xsessions:${config.services.displayManager.sessionData.desktops}/share/wayland-sessions:$SHELL --asterisks --remember --remember-user-session --time";
       };
-      # Автологін: запускається лише при старті системи, обходить tuigreet повністю.
-      initial_session = {
-        user = "lioha";
-        command = "uwsm start -e -D Hyprland hyprland.desktop";
-      };
     };
   };
   security.sudo.extraRules = [
@@ -277,7 +279,10 @@
   nixpkgs.config.allowUnfree = true;
   nixpkgs.config.allowBroken = true;
   nix.settings = {
-    experimental-features = "nix-command flakes";
+    experimental-features = [
+      "nix-command"
+      "flakes"
+    ];
     extra-substituters = [ "https://noctalia.cachix.org" ];
     extra-trusted-public-keys = [
       "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4="
