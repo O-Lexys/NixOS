@@ -1,6 +1,11 @@
 {
   description = "My nix config";
   inputs = {
+    driftwm.url = "github:malbiruk/driftwm";
+    wayvibes = {
+      url = "github:sahaj-b/wayvibes";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     concord.url = "github:chojs23/concord";
     hyprland.url = "github:hyprwm/Hyprland";
     #hyprgrass = {
@@ -47,6 +52,8 @@
       musnix,
       hyprland,
       concord,
+      wayvibes,
+      driftwm,
       ...
     }@inputs:
     let
@@ -103,7 +110,10 @@
 
       nixosConfigurations = {
         Lioha = nixpkgs.lib.nixosSystem {
-          modules = [ ./configuration.nix ];
+          modules = [
+            driftwm.nixosModules.default
+            ./configuration.nix
+          ];
           specialArgs = { inherit system inputs hyprland; };
         };
       };
@@ -121,6 +131,8 @@
               musnix
               hyprland
               concord
+              wayvibes
+              driftwm
               ;
           };
           modules = [ ./home.nix ];

@@ -33,7 +33,6 @@
     "nct6775"
     "ec_sys"
     "v4l2loopback"
-    "usbmon"
   ];
 
   boot.kernelParams = [
@@ -41,11 +40,6 @@
     "acpi_enforce_resources=lax"
   ];
   environment.systemPackages = with pkgs; [
-    pipx
-    ydotool
-    osu-lazer-bin
-    kdePackages.kio-extras
-    libmtp
     #inputs.hyprgrass.packages.${pkgs.system}.default
     speech-denoiser
     rnnoise
@@ -80,7 +74,7 @@
     jdk25
     xdotool
     xclip
-    whisper-cpp
+    #whisper-cpp
     nh
     ollama
     git
@@ -98,20 +92,20 @@
   ];
   environment.sessionVariables = {
     LIBVA_DRIVER_NAME = "iHD";
+    __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+  };
+  networking.wg-quick.interfaces.wg0 = {
+    configFile = "/home/lioha/wireguard/wg0.conf";
+  };
+  networking.networkmanager.enable = true;
+  networking.wireguard.enable = true;
+  networking.firewall = {
+    enable = true;
+    checkReversePath = false;
   };
   services.udev.extraRules = ''
     ACTION=="add", SUBSYSTEM=="platform", DRIVERS=="msi-ec", ATTR{fan_mode}="*", MODE="0666"
-    KERNEL=="hidraw*", ATTRS{idVendor}=="4c4a", ATTRS{idProduct}=="4255", MODE="0666"
-    KERNEL=="usbmon*", GROUP="wireshark", MODE="0640", SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTR{idVendor}=="1d57", ATTR{idProduct}=="fa60", MODE="0666", TAG+="uaccess"
   '';
-
-  systemd.services.wowlan-enable = {
-    description = "Enable WoWLAN magic-packet before suspend";
-    wantedBy = [ "sleep.target" ];
-    before = [ "sleep.target" ];
-    serviceConfig.Type = "oneshot";
-    serviceConfig.ExecStart = "${pkgs.iw}/bin/iw phy phy0 wowlan enable magic-packet";
-  };
   virtualisation.docker = {
     enable = true;
     daemon.settings = {
@@ -122,50 +116,25 @@
       ];
     };
   };
-  networking.firewall.trustedInterfaces = [ "docker0" ];
-  networking.firewall.extraCommands = ''
-    iptables -I DOCKER-USER -j RETURN
-  '';
   users.users.lioha.extraGroups = [
-    "kvm"
-    "wireshark"
     "adbusers"
     "docker"
     "input"
   ];
-  services = {
-    desktopManager.plasma6.enable = false;
-    resolved.enable = true;
-    sunshine = {
-      enable = true;
-      autoStart = true;
-      capSysAdmin = true;
-      openFirewall = true;
-      settings = {
-        output_name = "HEADLESS-1";
-        capture = "wlr";
-      };
-    };
-    input-remapper.enable = true;
-    cloudflare-warp.enable = true;
-    gvfs.enable = true;
-    flatpak.enable = true;
-    upower.enable = true;
-    #auto-cpufreq.enable = true;
-    udisks2.enable = true;
-    power-profiles-daemon.enable = true;
-    xserver.enable = true;
-    thermald.enable = true;
-    openssh = {
-      enable = true;
-      openFirewall = true;
-      settings = {
-        PasswordAuthentication = false; # тільки ключі
-        PermitRootLogin = "no";
-        KbdInteractiveAuthentication = false;
-      };
-    };
+  services.sunshine = {
+    enable = true;
+    autoStart = true;
+    capSysAdmin = true;
+    openFirewall = true;
   };
+  services.cloudflare-warp.enable = true;
+  services.flatpak.enable = true;
+  services.upower.enable = true;
+  #services.auto-cpufreq.enable = true;
+  services.udisks2.enable = true;
+  services.power-profiles-daemon.enable = true;
+  services.xserver.enable = true;
+  services.thermald.enable = true;
   services.logind.settings.Login = {
     HandleLidSwitch = "lock";
     HandleLidSwitchExternalPower = "lock";
@@ -174,22 +143,14 @@
   };
   hardware.graphics.enable = true;
   hardware.enableRedistributableFirmware = true;
+  services.zerotierone.enable = true;
   services.xserver.videoDrivers = [ "nvidia" ];
   xdg.portal = {
     enable = true;
     config.common.default = "hyprland";
   };
   programs = {
-    driftwm.enable = true;
-    appimage = {
-      enable = true;
-      binfmt = true;
-    };
-    fuse.userAllowOther = true;
-    wireshark = {
-      enable = true;
-      package = pkgs.wireshark;
-    };
+    steam.remotePlay.openFirewall = true;
     noctalia.enable = true;
     starship = {
       enable = true;
@@ -230,11 +191,7 @@
       package = hyprland.packages.${pkgs.system}.hyprland;
     };
     coolercontrol.enable = true;
-    steam = {
-      enable = true;
-      remotePlay.openFirewall = true;
-      localNetworkGameTransfers.openFirewall = true;
-    };
+    steam.enable = true;
     nano.enable = false;
     ssh.startAgent = true;
   };
@@ -279,10 +236,7 @@
   nixpkgs.config.allowUnfree = true;
   nixpkgs.config.allowBroken = true;
   nix.settings = {
-    experimental-features = [
-      "nix-command"
-      "flakes"
-    ];
+    experimental-features = "nix-command flakes";
     extra-substituters = [ "https://noctalia.cachix.org" ];
     extra-trusted-public-keys = [
       "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4="
@@ -294,7 +248,6 @@
   security = {
     polkit = {
       enable = true;
-      enablePkexecWrapper = true;
       extraConfig = ''
         polkit.addRule(function(action, subject) {
           if (action.id == "org.freedesktop.policykit.exec" &&

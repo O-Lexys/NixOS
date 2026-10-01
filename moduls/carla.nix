@@ -16,7 +16,6 @@
     pkgs.calf
     pkgs.x42-plugins
     pkgs.zam-plugins
-    pkgs.eq10q
     pkgs.mda_lv2
     pkgs.swh_lv2
     pkgs.noise-repellent

@@ -1,4 +1,5 @@
 { config, ... }: {
+  powerManagement.powertop.enable = true;
   hardware = {
     bluetooth.enable = true;
     graphics = {

@@ -1,6 +1,7 @@
 { config, pkgs, ... }: # Додано config в аргументи
 {
   boot = {
+    supportedFilesystems = [ "fuse" ];
     kernelPackages = pkgs.linuxPackages_latest;
     tmp.cleanOnBoot = true;
 
@@ -21,12 +22,11 @@
 
     plymouth = {
       enable = true;
-      themePackages = with pkgs;
-        [
-          (adi1090x-plymouth-themes.override {
-            selected_themes = [ "square_hud" ];
-          })
-        ];
+      themePackages = with pkgs; [
+        (adi1090x-plymouth-themes.override {
+          selected_themes = [ "square_hud" ];
+        })
+      ];
     };
 
     consoleLogLevel = 0;
@@ -47,8 +47,10 @@
   };
 
   powerManagement.enable = true;
-  swapDevices = [{
-    device = "/var/lib/swapfile";
-    size = 16 * 1024;
-  }];
+  swapDevices = [
+    {
+      device = "/var/lib/swapfile";
+      size = 16 * 1024;
+    }
+  ];
 }
